@@ -1,9 +1,10 @@
 # 단일 그래프와 전체 개별 그래프를 합쳤음
+# 현재까지 Best
 
 import dataiku
 from dataiku import pandasutils as pdu
 from bokeh.io import curdoc, output_notebook, show
-from bokeh.layouts import gridplot, column, row
+from bokeh.layouts import gridplot, column, row, Spacer
 from bokeh.models import Select, ColumnDataSource, CustomJS, Div
 from bokeh.plotting import figure
 import numpy as np
@@ -19,7 +20,7 @@ output_notebook()
 p_histogram = figure(title="Histogram of Volume by Diameter",
                      x_axis_label='Diameter',
                      y_axis_label='Volume',
-                     tools='pan,box_zoom,reset,save')
+                     tools='pan,box_zoom,reset,save', width=600)
 
 initial_batch = df['Batch'].unique()[0]
 filtered_df = df[df['Batch'] == initial_batch]
@@ -74,10 +75,9 @@ batch_select.js_on_change('value', callback)
 
 # 주석 추가 (HTML 형식)
 legend = Div(text="""
-    <b>Legend:</b>
     <ul>
-        <li style="color:green;">Green bar: Suspension</li>
         <li style="color:purple;">Purple bar: PSD(mean)</li>
+        <li style="color:green;">Green bar: Suspension</li>        
     </ul>
     """, width=400, height=50)
 
@@ -124,11 +124,11 @@ for batch in df['Batch'].unique():
 # 플롯을 5열 그리드로 배치
 grid = gridplot(plots, ncols=5)
 
-# 단일 배치 히스토그램과 드롭다운, 그리고 주석을 함께 배치
-top_layout = row(column(batch_select, p_histogram), legend)
+# 단일 배치 히스토그램과 드롭다운 배치, legend를 우측에 배치
+top_layout = row(Spacer(width=450), column(batch_select, p_histogram))
 
-# 전체 레이아웃을 상단의 단일 그래프, 주석, 전체 배치 플롯과 함께 결합
-layout = column(top_layout, grid)
+# 전체 레이아웃을 상단의 단일 그래프, 우측의 legend, 전체 배치 플롯과 함께 결합
+layout = column(top_layout, row(Spacer(width=1300), column(legend)), grid)
 
 # 레이아웃 출력
 curdoc().add_root(layout)
