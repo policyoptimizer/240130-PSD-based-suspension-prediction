@@ -6,12 +6,22 @@ from dataiku import pandasutils as pdu
 from bokeh.io import curdoc, output_notebook, show
 from bokeh.layouts import gridplot, column
 from bokeh.plotting import figure
+from bokeh.models import Div
 
 # Dataiku에서 데이터셋 불러오기
 df = dataiku.Dataset('df').get_dataframe()
 
 # Dataiku 노트북 출력 설정
 output_notebook()
+
+# 주석 추가 (HTML 형식)
+legend = Div(text="""
+    <b>Legend:</b>
+    <ul>
+        <li style="color:purple;">Purple bar: PSD(mean)</li>
+        <li style="color:green;">Green bar: Suspension</li>
+    </ul>
+    """, width=400, height=50)
 
 # 모든 배치에 대해 공통 가로축(Diameter)과 세로축(Volume) 범위를 계산
 global_x_range = (df['Diameter'].min(), df['Diameter'].max())
@@ -60,7 +70,10 @@ for batch in df['Batch'].unique():
 # 플롯을 5열 그리드로 배치
 grid = gridplot(plots, ncols=5)
 
+# 전체 레이아웃을 주석과 함께 결합
+layout = column(legend, grid)
+
 # 레이아웃 출력
-curdoc().add_root(grid)
-show(grid)
+curdoc().add_root(layout)
+show(layout)
 
