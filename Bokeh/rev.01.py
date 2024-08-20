@@ -1,3 +1,5 @@
+# 각 배치별로 입자 분포 등 확인 가능함
+
 import dataiku
 from dataiku import pandasutils as pdu
 from bokeh.io import curdoc, output_notebook
