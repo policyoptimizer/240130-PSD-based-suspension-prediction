@@ -82,7 +82,7 @@ legend = Div(text="""
     """, width=400, height=50)
 
 # 모든 배치에 대한 플롯 생성
-global_x_range = (df['Diameter'].min(), df['Diameter'].max())
+global_x_range = (0, 250)
 global_y_range = (df['Volume'].min(), df['Volume'].max())
 plots = []
 
